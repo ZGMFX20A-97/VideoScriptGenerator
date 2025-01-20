@@ -23,7 +23,7 @@ creativity = st.slider(
     step=0.1,
 )
 
-submit = st.button("生成脚本")
+submit = st.button("生成文案")
 
 if submit and not openai_api_key:
     st.info("请输入你的OpenAI AI密钥")
@@ -40,7 +40,7 @@ if submit:
             _, title, script = generate_script(
                 subject, video_length, creativity, openai_api_key
             )
-            st.success("视频脚本已生成！")
+            st.success("视频文案已生成！")
             st.subheader("🔥标题")
             st.write(title)
             st.subheader("📝脚本")
