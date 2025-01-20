@@ -3,7 +3,7 @@ from utils import generate_script
 import openai
 
 
-st.title("🎬视频脚本生成器")
+st.title("🎬视频文案生成器")
 
 with st.sidebar:
     openai_api_key = st.text_input("请输入OpenAI API密钥：", type="password")
@@ -12,11 +12,11 @@ with st.sidebar:
 subject = st.text_input("💡请输入视频主题")
 
 video_length = st.number_input(
-    "请输入视频的大致时常（单位：分钟）", min_value=0.1, step=1.0
+    "⏰请输入视频的大致时长（单位：分钟）", min_value=0.1, step=1.0
 )
 
 creativity = st.slider(
-    "✨请输入视频脚本的创造力（数字越小越严谨，数字越大越天马行空）",
+    "✨请输入视频文案的创造力（数字越小越严谨，数字越大越天马行空）",
     min_value=0.0,
     max_value=1.0,
     value=0.5,
@@ -47,7 +47,7 @@ if submit:
             st.write(script)
         except openai.AuthenticationError as e:
             st.error("错误：提供的 API 密钥无效")
-            
+
         except openai.RateLimitError as e:
             st.error(
                 """错误：达到了 API 的请求速率限制
@@ -57,4 +57,3 @@ if submit:
             st.error("错误：无法连接到OPENAI服务器，请稍后再试")
         except openai.InternalServerError as e:
             st.error("错误：OPENAI服务器出现错误，请稍后再试")
-    
