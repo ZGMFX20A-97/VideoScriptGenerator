@@ -2,58 +2,57 @@ import streamlit as st
 from utils import generate_script
 import openai
 
+#アプリのタイトルを定義
+st.title("🎬動画台本ジェネレーター")
 
-st.title("🎬视频文案生成器")
-
+#api keyを入力するためのサイドバーを定義
 with st.sidebar:
-    openai_api_key = st.text_input("请输入OpenAI API密钥：", type="password")
-    st.markdown("[获取OpenAI密钥](https://platform.openai.com/account/api-keys)")
+    openai_api_key = st.text_input(
+        "OpenAI API Keyを入力してください：", type="password"
+    )
+    st.markdown(
+        "[OpenAI API Keyを取得する](https://platform.openai.com/account/api-keys)"
+    )
 
-subject = st.text_input("💡请输入视频主题")
+#動画テーマを受け取る変数を定義
+subject = st.text_input("💡動画のテーマを入力してください")
 
+#動画の長さを受け取る変数を定義
 video_length = st.number_input(
-    "⏰请输入视频的大致时长（单位：分钟）", min_value=0.1, step=1.0
+    "⏰動画の長さを入力してください（単位：分）", min_value=0.1, step=1.0
 )
 
+#モデルのtemperatureを受け取る変数を定義
 creativity = st.slider(
-    "✨请输入视频文案的创造力（数字越小越严谨，数字越大越天马行空）",
+    "✨AIのクリエーティビティ（数字が小さいほど控えめ，大きいほど自由奔放）",
     min_value=0.0,
     max_value=1.0,
     value=0.5,
     step=0.1,
 )
 
-submit = st.button("生成文案")
+#生成ボタンの定義
+submit = st.button("台本を生成する")
 
 if submit and not openai_api_key:
-    st.info("请输入你的OpenAI AI密钥")
+    st.info("OpenAI API Keyを入力してください")
     st.stop()
 if submit and not subject:
-    st.info("请输入视频主题")
+    st.info("動画のテーマを入力してください")
     st.stop()
 if submit and not video_length >= 0.1:
-    st.info("视频长度需大于等于0.1分钟")
+    st.info("動画の長さは最低でも0.1分です")
     st.stop()
 if submit:
-    with st.spinner(("AI正在思考，请稍等。。。")):
+    with st.spinner(("AIが考えています。少々お待ちを。。。")):
         try:
             _, title, script = generate_script(
                 subject, video_length, creativity, openai_api_key
             )
-            st.success("视频文案已生成！")
-            st.subheader("🔥标题")
+            st.success("台本が出来上がりました！")
+            st.subheader("🔥タイトル")
             st.write(title)
-            st.subheader("📝脚本")
+            st.subheader("📝内容")
             st.write(script)
         except openai.AuthenticationError as e:
-            st.error("错误：提供的 API 密钥无效")
-
-        except openai.RateLimitError as e:
-            st.error(
-                """错误：达到了 API 的请求速率限制
-                        或免费账户或订阅账户的使用配额已用完"""
-            )
-        except openai.APIConnectionError as e:
-            st.error("错误：无法连接到OPENAI服务器，请稍后再试")
-        except openai.InternalServerError as e:
-            st.error("错误：OPENAI服务器出现错误，请稍后再试")
+            st.error("エラー：正しいAPI Keyを入力してください")
